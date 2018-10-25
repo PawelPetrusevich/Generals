@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using General.IdentityServer.Identity_Option;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,7 +29,12 @@ namespace General.IdentityServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentityServer()
-                .AddDeveloperSigningCredential();
+                .AddDeveloperSigningCredential()
+                .AddInMemoryApiResources(IdentityConfig.GetApiResources())
+                .AddInMemoryClients(IdentityConfig.GetClient())
+                .AddTestUsers(IdentityConfig.GetUsers());
+
+            services.AddMvcCore();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,8 +49,7 @@ namespace General.IdentityServer
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseIdentityServer();
         }
     }
 }

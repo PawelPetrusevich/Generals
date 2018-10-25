@@ -25,7 +25,18 @@ namespace General.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvcCore()
+                .AddAuthorization()
+                .AddJsonFormatters();
+
+            services.AddAuthentication("Bearer").AddIdentityServerAuthentication(
+                options =>
+                    {
+                        options.Authority = "http://localhost:5000";
+                        options.RequireHttpsMetadata = false;
+
+                        options.ApiName = "api1";
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,7 +51,8 @@ namespace General.API
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
