@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 
@@ -30,6 +31,26 @@ namespace General.IdentityServer.Identity_Option
 
             clients.Add(baseClient);
 
+            var frontClient = new Client
+            {
+                ClientId = "front",
+                ClientName = "Front Client",
+                AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+
+                RedirectUris = { "http://localhost:5002/signin-oidc" },
+
+                PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+                AllowedScopes = new List<string>
+                                    {
+                                        IdentityServerConstants.StandardScopes.OpenId,
+                                        IdentityServerConstants.StandardScopes.Profile,
+                                        "api1"
+                                    },
+                AllowOfflineAccess = true
+            };
+
+            clients.Add(frontClient);
+
             return clients;
         }
 
@@ -38,23 +59,33 @@ namespace General.IdentityServer.Identity_Option
             var users = new List<TestUser>();
 
             var admin = new TestUser
-                              {
-                                  SubjectId = "1",
-                                  Username = "admin",
-                                  Password = "admin"
-                              };
+            {
+                SubjectId = "1",
+                Username = "admin",
+                Password = "admin"
+            };
 
             var user = new TestUser
-                              {
-                                  SubjectId = "2",
-                                  Username = "user",
-                                  Password = "user"
-                              };
+            {
+                SubjectId = "2",
+                Username = "user",
+                Password = "user"
+            };
 
             users.Add(admin);
             users.Add(user);
 
             return users;
+        }
+
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            var resources = new List<IdentityResource>();
+
+            resources.Add(new IdentityResources.OpenId());
+            resources.Add(new IdentityResources.Profile());
+
+            return resources;
         }
     }
 }

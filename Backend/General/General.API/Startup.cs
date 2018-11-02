@@ -26,17 +26,17 @@ namespace General.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvcCore()
-                .AddAuthorization()
+                //.AddAuthorization()
                 .AddJsonFormatters();
 
-            services.AddAuthentication("Bearer").AddIdentityServerAuthentication(
-                options =>
-                    {
-                        options.Authority = "http://localhost:5000";
-                        options.RequireHttpsMetadata = false;
+            //services.AddAuthentication("Bearer").AddIdentityServerAuthentication(
+            //    options =>
+            //        {
+            //            options.Authority = "http://localhost:5000";
+            //            options.RequireHttpsMetadata = false;
 
-                        options.ApiName = "api1";
-                    });
+            //            options.ApiName = "api1";
+            //        });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

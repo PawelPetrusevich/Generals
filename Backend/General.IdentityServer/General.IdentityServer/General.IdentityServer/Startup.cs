@@ -30,11 +30,12 @@ namespace General.IdentityServer
         {
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
+                .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
                 .AddInMemoryApiResources(IdentityConfig.GetApiResources())
                 .AddInMemoryClients(IdentityConfig.GetClient())
                 .AddTestUsers(IdentityConfig.GetUsers());
 
-            services.AddMvcCore();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +51,8 @@ namespace General.IdentityServer
             }
 
             app.UseIdentityServer();
+            app.UseStaticFiles();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
